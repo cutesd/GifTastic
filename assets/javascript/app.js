@@ -1,37 +1,72 @@
 $(document).ready(function () {
 
-    var GifTastic = function (images) {
+    var GifTastic = function (options) {
+
+        var selImg;
+        var selNum;
 
         this.play = init;
 
         function init() {
+            $("#searchBtn").on("click", searchBtnPress);
+            $('#searchInput').keypress(function (e) {
+                var key = e.which;
+                if (key == 13) {
+                    $('#searchBtn').click();
+                    return false;
+                }
+            });
+            $("#removeBtn").on("click", clearBtnPress);
+            $("#stopBtn").on("click", stopBtnPress);
+            //
             createButtons();
-            addBtn('unicorn');
-            search("Ryan Gosling");
+        }
+
+        /* ===================  BUTTONS ===================== */
+        function searchBtnPress(e) {
+            e.preventDefault();
+            var val = $('#searchInput').val();
+            $('#searchInput').val('');
+            addBtn(val, true);
+        }
+
+        function clearBtnPress(e) {
+            e.preventDefault();
+            clearImages();
+            $('.d-flex').empty();
+        }
+
+        function stopBtnPress(e){
+            e.preventDefault();
+            if(selImg) selImg.click();
         }
 
         function createButtons() {
-            $.each(images, function (i, val) {
-                addBtn(val);
+            $.each(options.topics, function (i, val) {
+                var trigger = (i === 0);
+                addBtn(val, trigger);
             });
         }
 
-        function addBtn(val) {
+        function addBtn(val, trigger) {
             var btn = $('<button>').text(val);
-            btn.addClass('btn btn-danger px-3 mx-2');
+            btn.addClass('btn btn-danger px-3 m-2');
             btn.on("click", newSearch);
             $('.d-flex').append(btn);
+            if (trigger) btn.click();
         }
 
-        function newSearch(){
+        /* =================== SEARCH ===================== */
+        function newSearch() {
             clearImages();
             search($(this).text());
         }
 
         function search(str) {
-            str = str.replace(" ", "+");
+            str = verifyStr(str);
+            //
             $.ajax({
-                url: "http://api.giphy.com/v1/gifs/search?q="+str.toLowerCase()+"&api_key=5aHUfq0wQEZJreua4O5K7J1qBL7S8vzj&limit=10",
+                url: "http://api.giphy.com/v1/gifs/search?q=" + str.toLowerCase() + "&api_key=5aHUfq0wQEZJreua4O5K7J1qBL7S8vzj&limit=" + options.limit,
                 method: "GET"
             }).then(function (response) {
                 console.log(response);
@@ -39,41 +74,63 @@ $(document).ready(function () {
             });
         }
 
+        /* ===================  IMAGES & INTERACTION ===================== */
         function buildImg(i, val) {
             var still_obj = val.images.fixed_height_still;
+            var __w = still_obj.width;
+            var __h = still_obj.height;
 
             var col = $('<div>').addClass('col-md-4 text-center');
-            var img = $('<img>').attr({ 'src': still_obj.url, 'data-state': "still" });
+            var img = $('<img>').attr({ id: "img" + i, 'src': still_obj.url, 'data-state': "still", width: __w, height: __h });
             img.addClass('gif img-fluid p-2');
             img.on("click", aniToggleBtn);
             col.append(img);
+            col.append('<p>rating: '+ val.rating+'</p>');
             $('.row').append(col);
 
         }
 
         function aniToggleBtn() {
-            var img = $(this);
-            var state = img.attr('data-state');
-            var url = img.attr('src').split('.');
+            var url;
+            if (selImg !== undefined && selImg.attr('data-state') != 'still') {
+                url = selImg.attr('src').split('.');
+                url[2] = url[2].replace('_d', "_s");
+                selImg.attr({ src: url.join('.'), 'data-state': 'still' });
+                selImg.removeClass('selected');
+                selImg = undefined;
+                if (selNum === $(this).attr('id')) return;
+            }
+            selImg = $(this);
+            selNum = $(this).attr('id');
+            var state = selImg.attr('data-state');
+            url = selImg.attr('src').split('.');
             if (state === "still") {
                 url[2] = url[2].replace('_s', "_d");
-                img.attr({ src: url.join('.'), 'data-state': 'animate' });
-            } else {
-                url[2] = url[2].replace('_d', "_s");
-                img.attr({ src: url.join('.'), 'data-state': 'still' });
+                selImg.attr({ src: url.join('.'), 'data-state': 'animate' });
+                selImg.addClass('selected');
             }
         }
 
-        function clearImages(){
+        function clearImages() {
             $('.row').empty();
+        }
+
+        /* ===================  VERIFY STRING ===================== */
+        function verifyStr(str) {
+            var arr = str.split(" ");
+            var temp_arr = [];
+            $.each(arr, function (i, val) {
+                if (val.length > 0) temp_arr.push(val);
+            });
+            return temp_arr.join("+");
         }
 
         // 
         // 
     }
 
-    var list = ['dog', 'cat', 'parrot'];
-    var myGif = new GifTastic({list_arr:list, });
+    var list = ['Neil Patrick Harris', 'Amy Poehler', 'Samuel L Jackson', 'Tina Fey', 'Terry Crews'];
+    var myGif = new GifTastic({ topics: list, limit: 12 });
     myGif.play();
 
-})
+});

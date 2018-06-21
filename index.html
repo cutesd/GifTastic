@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <meta name="description" content="Create dynamic giphy library">
+    <meta name="description" content="Build a dynamic giphy library using API.">
     <meta name="author" content="Kimberly Cooper">
-    <!-- <link rel="icon" href="favicon.ico"> -->
+    <link rel="icon" href="assets/images/giphy.png">
     <title>GifTastic</title>
 
     <!-- Bootstrap CSS -->
@@ -21,21 +21,23 @@
 
 <body>
 
-    <div class="jumbotron jumbotron-fluid text-center">
+    <div class="jumbotron jumbotron-fluid pb-4 text-center">
         <div class="container">
             <h1>GifTastic</h1>
             <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2 ml-auto" type="search" value="" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Search</button>
+                <input id="searchInput" class="form-control mr-sm-2 ml-auto" type="search" value="" placeholder="Enter an actor's name" aria-label="Search">
+                <button id="searchBtn" class="btn btn-outline-danger my-2 mr-2 my-sm-0" type="submit">Search</button>
             </form>
             <hr>
-            <div class="d-flex justify-content-center flex-container">
-
+            <div class="d-flex justify-content-center flex-container w-75 flex-wrap mx-auto">
             </div>
+            <button id="removeBtn" class="btn btn-outline-success mt-3 mr-2" type="submit">Remove All Buttons</button>
+            <button id="stopBtn" class="btn btn-outline-info mt-3 mr-2" type="submit">Stop Animating</button>
         </div>
     </div>
 
     <div class="container">
+        <h1 class="title"></h1>
         <div class="row justify-content-center">
 
         </div>
