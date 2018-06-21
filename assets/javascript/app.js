@@ -36,9 +36,9 @@ $(document).ready(function () {
             $('.d-flex').empty();
         }
 
-        function stopBtnPress(e){
+        function stopBtnPress(e) {
             e.preventDefault();
-            if(selImg) selImg.click();
+            if (selImg) selImg.click();
         }
 
         function createButtons() {
@@ -49,7 +49,7 @@ $(document).ready(function () {
         }
 
         function addBtn(val, trigger) {
-            var btn = $('<button>').text(val);
+            var btn = $('<button>').text(titleStr(val));
             btn.addClass('btn btn-danger px-3 m-2');
             btn.on("click", newSearch);
             $('.d-flex').append(btn);
@@ -70,7 +70,12 @@ $(document).ready(function () {
                 method: "GET"
             }).then(function (response) {
                 console.log(response);
-                $.each(response.data, buildImg);
+                if (response.data.length > 0) {
+                    $('.title').text(titleStr(str));
+                    $.each(response.data, buildImg);
+                } else {
+
+                }
             });
         }
 
@@ -85,7 +90,7 @@ $(document).ready(function () {
             img.addClass('gif img-fluid p-2');
             img.on("click", aniToggleBtn);
             col.append(img);
-            col.append('<p>rating: '+ val.rating+'</p>');
+            col.append('<p>rating: ' + val.rating + '</p>');
             $('.row').append(col);
 
         }
@@ -115,7 +120,7 @@ $(document).ready(function () {
             $('.row').empty();
         }
 
-        /* ===================  VERIFY STRING ===================== */
+        /* =================== STRING FORMATTING ===================== */
         function verifyStr(str) {
             var arr = str.split(" ");
             var temp_arr = [];
@@ -125,12 +130,30 @@ $(document).ready(function () {
             return temp_arr.join("+");
         }
 
+        function titleStr(str) {
+            var arr;
+            if (str.indexOf('+') > -1) {
+                arr = str.split('+');
+            } else if (str.indexOf(' ') > -1) {
+                arr = str.split(' ');
+            } else {
+                str = str.substr(0, 1).toUpperCase() + str.substr(1);
+
+                return str;
+            }
+            var temp_arr = [];
+            $.each(arr, function (i, val) {
+                temp_arr.push(val.substr(0, 1).toUpperCase() + val.substr(1));
+            });
+            return temp_arr.join(" ");
+        }
+
         // 
         // 
     }
 
     var list = ['Neil Patrick Harris', 'Amy Poehler', 'Samuel L Jackson', 'Tina Fey', 'Terry Crews'];
-    var myGif = new GifTastic({ topics: list, limit: 12 });
+    var myGif = new GifTastic({ topics: list, limit: 10 });
     myGif.play();
 
 });
