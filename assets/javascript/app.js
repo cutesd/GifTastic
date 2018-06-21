@@ -39,15 +39,21 @@ $(document).ready(function () {
             var still_obj = val.images.original_still;
             var ani_obj = val.images.original;
 
-            var col = $('<div>').addClass('col-md-4');
-            var img = $('<img>').attr('src', still_obj.url);
-            img.addClass('img-fluid p-2');
+            var col = $('<div>').addClass('col-md-4 text-center');
+            var img = $('<img>').attr({ 'src': still_obj.url, 'data-state': "still"});
+            img.addClass('gif img-fluid p-2');
             img.on("click", aniToggleBtn);
             col.append(img);
             $('.row').append(col);
-            
+
 
             // <img src="https://media3.giphy.com/media/W6LbnBigDe4ZG/200_s.gif" data-still="https://media3.giphy.com/media/W6LbnBigDe4ZG/200_s.gif" data-animate="https://media3.giphy.com/media/W6LbnBigDe4ZG/200.gif" data-state="still" class="gif">
+        }
+
+        function aniToggleBtn() {
+            console.log($(this).attr('data-state'));
+            var state = $(this).attr('data-state');
+            
         }
 
         // 
