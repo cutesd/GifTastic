@@ -21,3 +21,24 @@ img:hover {
 .selected {
     border: 5px solid #dc3545;
 }
+
+.card-columns{
+    column-count: 3;
+}
+
+@media screen and (max-width:992px){
+    .card-columns{
+        column-count: 2;
+    }
+    
+}
+
+@media screen and (max-width:768px){
+    .card-columns{
+        column-count: 1;
+    }
+    #searchInput{
+        width:100%;
+    }
+}
+

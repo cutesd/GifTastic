@@ -77,7 +77,7 @@ $(document).ready(function () {
                 url: "https://api.giphy.com/v1/gifs/search?q=" + str.toLowerCase() + "&api_key=5aHUfq0wQEZJreua4O5K7J1qBL7S8vzj&limit=" + options.limit,
                 method: "GET"
             }).then(function (response) {
-                // console.log(response);
+                console.log(response);
                 if (response.data.length > 0) {
                     $('.title').text(titleStr(str));
                     $.each(response.data, buildImg);
@@ -94,13 +94,26 @@ $(document).ready(function () {
             var __w = still_obj.width;
             var __h = still_obj.height;
 
-            var col = $('<div>').addClass('col-md-4 text-center');
-            var img = $('<img>').attr({ id: "img" + i, 'src': still_obj.url, 'data-state': "still", width: __w, height: __h });
-            img.addClass('gif img-fluid p-2');
-            img.on("click", aniToggleBtn);
-            col.append(img);
-            col.append('<p>rating: ' + val.rating + '</p>');
-            $('.row').append(col);
+
+            var card = $('<div>').addClass('card');
+
+            card.append(`<img class="card-img-top gif" src="` + still_obj.url + `" id=img` + i + `" data-state="still" alt="` + val.title + `">
+            <div class="card-body">
+                <h5 class="card-title">`+ val.title + `</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Rating: `+ val.rating + `</h6>
+                <p class="card-text">Click on the image to see it animate. <br><br>id: `+val.id+` <br>
+                url: <a href="`+val.bitly_url+`" target="_blank">`+val.bitly_url+`</a></p>
+            </div>
+            <div class="card-footer">
+            <a class="btn btn-danger btn-block" href="`+ val.images.original.url + `" download="giphy.gif">Download</a>
+            </div>`);
+            card.find('img').on("click", aniToggleBtn);
+            card.find('a').on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                window.open(url, '_blank');
+            });
+            $('.card-columns').append(card);
 
         }
 
