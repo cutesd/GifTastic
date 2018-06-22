@@ -33,6 +33,7 @@ $(document).ready(function () {
 
         function clearBtnPress(e) {
             e.preventDefault();
+            topics = [];
             clearImages();
             $('.d-flex').empty();
         }
