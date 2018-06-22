@@ -4,6 +4,7 @@ $(document).ready(function () {
 
         var selImg;
         var selNum;
+        var topics = [];
 
         this.play = init;
 
@@ -49,6 +50,12 @@ $(document).ready(function () {
         }
 
         function addBtn(val, trigger) {
+            if (!notDuplicate(val)) {
+                clearImages();
+                $('.title').text("You've already selected " + titleStr(val));
+                return;
+            }
+            topics.push(titleStr(val));
             var btn = $('<button>').text(titleStr(val));
             btn.addClass('btn btn-danger px-3 m-2');
             btn.on("click", newSearch);
@@ -69,12 +76,13 @@ $(document).ready(function () {
                 url: "http://api.giphy.com/v1/gifs/search?q=" + str.toLowerCase() + "&api_key=5aHUfq0wQEZJreua4O5K7J1qBL7S8vzj&limit=" + options.limit,
                 method: "GET"
             }).then(function (response) {
-                console.log(response);
+                // console.log(response);
                 if (response.data.length > 0) {
                     $('.title').text(titleStr(str));
                     $.each(response.data, buildImg);
                 } else {
-
+                    $('.title').text('Sorry, your search returned 0 results.');
+                    $(".d-flex button:last-child").remove()
                 }
             });
         }
@@ -117,10 +125,22 @@ $(document).ready(function () {
         }
 
         function clearImages() {
+            $('.title').text('');
             $('.row').empty();
         }
 
         /* =================== STRING FORMATTING ===================== */
+        function notDuplicate(str) {
+            var isDup = true;
+            $.each(topics, function (i, val) {
+                if (titleStr(str) === val) {
+                    isDup = false;
+                    return false;
+                }
+            });
+            return isDup;
+        }
+
         function verifyStr(str) {
             var arr = str.split(" ");
             var temp_arr = [];
@@ -132,10 +152,9 @@ $(document).ready(function () {
 
         function titleStr(str) {
             var arr;
+            str = verifyStr(str);
             if (str.indexOf('+') > -1) {
                 arr = str.split('+');
-            } else if (str.indexOf(' ') > -1) {
-                arr = str.split(' ');
             } else {
                 str = str.substr(0, 1).toUpperCase() + str.substr(1);
 
