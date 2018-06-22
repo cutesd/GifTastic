@@ -74,7 +74,7 @@ $(document).ready(function () {
             str = verifyStr(str);
             //
             $.ajax({
-                url: "http://api.giphy.com/v1/gifs/search?q=" + str.toLowerCase() + "&api_key=5aHUfq0wQEZJreua4O5K7J1qBL7S8vzj&limit=" + options.limit,
+                url: "https://api.giphy.com/v1/gifs/search?q=" + str.toLowerCase() + "&api_key=5aHUfq0wQEZJreua4O5K7J1qBL7S8vzj&limit=" + options.limit,
                 method: "GET"
             }).then(function (response) {
                 // console.log(response);
