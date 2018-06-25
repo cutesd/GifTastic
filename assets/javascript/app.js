@@ -27,7 +27,7 @@ $(document).ready(function () {
         /* ===================  BUTTONS ===================== */
         function searchBtnPress(e) {
             e.preventDefault();
-            var val = $('#searchInput').val();
+            var val = $('#searchInput').val().trim();
             $('#searchInput').val('');
             addBtn(val, true);
         }
